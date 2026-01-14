@@ -12,11 +12,16 @@ WEATHER_API_KEY = os.getenv("WEATHER_API_KEY")
 def get_weather(city):
     url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={WEATHER_API_KEY}&units=metric"
     res = requests.get(url).json()
+
+    if "main" not in res:
+        return 30, 70   # default safe values
+
     return res["main"]["temp"], res["main"]["humidity"]
 
 @app.route("/predict", methods=["POST"])
 def predict():
     data = request.json
+    print(data)
 
     soil = data["soil"]
     city = data["city"]
@@ -33,5 +38,6 @@ def predict():
     })
 import os
 app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+
 
 
